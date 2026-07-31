@@ -1,0 +1,67 @@
+package com.hamedvpn.vpngit.helper
+
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.hamedvpn.vpngit.AppConfig
+import com.hamedvpn.vpngit.R
+import com.hamedvpn.vpngit.extension.toast
+import com.hamedvpn.vpngit.util.LogUtil
+
+class FileChooserHelper(private val activity: AppCompatActivity) {
+    private var fileChooserCallback: ((Uri?) -> Unit)? = null
+    private var documentCreateCallback: ((Uri?) -> Unit)? = null
+
+    private val fileChooserLauncher: ActivityResultLauncher<Intent> =
+        activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val uri = result.data?.data
+            if (result.resultCode == AppCompatActivity.RESULT_OK && uri != null) {
+                fileChooserCallback?.invoke(uri)
+            } else {
+                fileChooserCallback?.invoke(null)
+            }
+            fileChooserCallback = null
+        }
+
+    private val documentCreateLauncher: ActivityResultLauncher<String> =
+        activity.registerForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
+            documentCreateCallback?.invoke(uri)
+            documentCreateCallback = null
+        }
+
+    fun launch(
+        mimeType: String = "*/*",
+        onResult: (Uri?) -> Unit
+    ) {
+        fileChooserCallback = onResult
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = mimeType
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        try {
+            fileChooserLauncher.launch(intent)
+        } catch (ex: ActivityNotFoundException) {
+            LogUtil.e(AppConfig.TAG, "File chooser activity not found", ex)
+            activity.toast(R.string.toast_require_file_manager)
+            fileChooserCallback?.invoke(null)
+            fileChooserCallback = null
+        }
+    }
+
+    fun createDocument(
+        fileName: String,
+        onResult: (Uri?) -> Unit
+    ) {
+        documentCreateCallback = onResult
+        try {
+            documentCreateLauncher.launch(fileName)
+        } catch (ex: ActivityNotFoundException) {
+            LogUtil.e(AppConfig.TAG, "Document creator activity not found", ex)
+            activity.toast(R.string.toast_require_file_manager)
+            documentCreateCallback?.invoke(null)
+            documentCreateCallback = null
+        }
+    }
+}

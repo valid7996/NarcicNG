@@ -1,0 +1,126 @@
+package com.hamedvpn.vpngit.ui
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.hamedvpn.vpngit.R
+import com.hamedvpn.vpngit.handler.SettingsManager
+import com.hamedvpn.vpngit.helper.CustomDividerItemDecoration
+import com.hamedvpn.vpngit.util.MyContextWrapper
+import com.hamedvpn.vpngit.util.Utils
+
+abstract class BaseActivity : AppCompatActivity() {
+
+    private var progressBar: LinearProgressIndicator? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        if (!Utils.getDarkModeStatus(this)) {
+            WindowCompat.getInsetsController(window, window.decorView).apply {
+                isAppearanceLightStatusBars = true
+            }
+        }
+    }
+
+    
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        android.R.id.home -> {
+
+            onBackPressedDispatcher.onBackPressed()
+            true
+        }
+
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(MyContextWrapper.wrap(newBase ?: return, SettingsManager.getLocale()))
+    }
+
+    
+    protected fun addCustomDividerToRecyclerView(recyclerView: RecyclerView, context: Context?, drawableResId: Int, orientation: Int = DividerItemDecoration.VERTICAL) {
+
+        val drawable = ContextCompat.getDrawable(context!!, drawableResId)
+        requireNotNull(drawable) { "Drawable resource not found" }
+
+        val dividerItemDecoration = CustomDividerItemDecoration(drawable, orientation)
+
+        recyclerView.addItemDecoration(dividerItemDecoration)
+    }
+
+    
+    protected fun setupToolbar(toolbar: Toolbar?, showHomeAsUp: Boolean = true, title: CharSequence? = null) {
+        val tb = toolbar ?: findViewById<Toolbar?>(R.id.toolbar)
+        tb?.let {
+            setSupportActionBar(it)
+            supportActionBar?.setDisplayHomeAsUpEnabled(showHomeAsUp)
+            title?.let { t -> this.title = t }
+        }
+        progressBar = findViewById(R.id.progress_bar)
+    }
+
+    
+    protected fun setContentViewWithToolbar(layoutResId: Int, showHomeAsUp: Boolean = true, title: CharSequence? = null) {
+        val base = LayoutInflater.from(this).inflate(R.layout.activity_base, null)
+        val container = base.findViewById<FrameLayout>(R.id.content_container)
+        LayoutInflater.from(this).inflate(layoutResId, container, true)
+        progressBar = base.findViewById(R.id.progress_bar)
+        super.setContentView(base)
+        setupToolbar(base, showHomeAsUp, title)
+    }
+
+    
+    protected fun setContentViewWithToolbar(childView: View, showHomeAsUp: Boolean = true, title: CharSequence? = null) {
+        val base = LayoutInflater.from(this).inflate(R.layout.activity_base, null)
+        val container = base.findViewById<FrameLayout>(R.id.content_container)
+        container.addView(childView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        progressBar = base.findViewById(R.id.progress_bar)
+        super.setContentView(base)
+        setupToolbar(base, showHomeAsUp, title)
+    }
+
+    
+    private fun setupToolbar(baseRoot: View, showHomeAsUp: Boolean, title: CharSequence?) {
+        val toolbar = baseRoot.findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar?.let {
+            setSupportActionBar(it)
+            supportActionBar?.setDisplayHomeAsUpEnabled(showHomeAsUp)
+            title?.let { t -> supportActionBar?.title = t }
+        }
+    }
+
+    
+    protected fun showLoading() {
+        runOnUiThread {
+            progressBar?.visibility = View.VISIBLE
+        }
+    }
+
+    
+    protected fun hideLoading() {
+        runOnUiThread {
+            progressBar?.visibility = View.GONE
+        }
+    }
+
+    
+    protected fun isLoadingVisible(): Boolean {
+        return progressBar?.visibility == View.VISIBLE
+    }
+}
+

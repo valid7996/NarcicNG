@@ -13,7 +13,7 @@
     <color name="home_background">#101314</color>
     <color name="home_surface">#33FFFFFF</color>
     <color name="home_surface_stroke">#4DFFFFFF</color>
-    <color name="home_brand_teal">#2FE6D8</color>
+    <color name="home_brand_teal">#00E89D</color>
     <color name="home_text_primary">#F5F7F7</color>
     <color name="home_text_secondary">#9AA3A6</color>
     <color name="home_warning">#F9A73C</color>

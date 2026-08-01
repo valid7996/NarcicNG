@@ -1,42 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- outer glow ring -->
     <item>
         <shape android:shape="oval">
-            <solid android:color="#1400E89D" />
+            <solid android:color="#2609CBB0" />
         </shape>
     </item>
-    <!-- middle glow ring -->
     <item
         android:left="14dp"
         android:top="14dp"
         android:right="14dp"
         android:bottom="14dp">
         <shape android:shape="oval">
-            <solid android:color="#2600E89D" />
+            <solid android:color="#4009CBB0" />
         </shape>
     </item>
-    <!-- inner glow ring -->
     <item
         android:left="28dp"
         android:top="28dp"
         android:right="28dp"
         android:bottom="28dp">
         <shape android:shape="oval">
-            <solid android:color="#4000E89D" />
-        </shape>
-    </item>
-    <!-- main button circle -->
-    <item
-        android:left="40dp"
-        android:top="40dp"
-        android:right="40dp"
-        android:bottom="40dp">
-        <shape android:shape="oval">
-            <solid android:color="#0D2A22" />
+            <solid android:color="#12201D" />
             <stroke
-                android:width="2dp"
-                android:color="#8000E89D" />
+                android:width="1.5dp"
+                android:color="#33E6D8" />
         </shape>
     </item>
 </layer-list>
+

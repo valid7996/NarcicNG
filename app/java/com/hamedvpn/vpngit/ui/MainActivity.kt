@@ -321,22 +321,16 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         when (style) {
             ConnectButtonStyle.IDLE -> {
                 binding.layoutConnectButton.setBackgroundResource(R.drawable.bg_connect_button_idle)
-                binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connect)
-                binding.tvConnectLabel.setTextColor(getColor(R.color.home_text_primary))
                 stopPulse()
             }
 
             ConnectButtonStyle.TESTING -> {
                 binding.layoutConnectButton.setBackgroundResource(R.drawable.bg_connect_button_testing)
-                binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connect)
-                binding.tvConnectLabel.setTextColor(getColor(R.color.home_text_primary))
                 startPulse()
             }
 
             ConnectButtonStyle.CONNECTED -> {
                 binding.layoutConnectButton.setBackgroundResource(R.drawable.bg_connect_button_connected)
-                binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connected)
-                binding.tvConnectLabel.setTextColor(getColor(R.color.home_brand_teal))
                 stopPulse()
             }
         }

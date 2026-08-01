@@ -123,14 +123,6 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/iv_power_icon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/ic_power_connect"
-                        android:contentDescription="@string/tasker_start_service" />
-
                     <TextView
                         android:id="@+id/tv_connect_label"
                         android:layout_width="wrap_content"

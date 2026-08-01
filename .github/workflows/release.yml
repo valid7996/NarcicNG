@@ -27,7 +27,7 @@ jobs:
           mkdir -p app/libs
           curl -L "https://github.com/2dust/AndroidLibXrayLite/releases/download/v26.7.5/libv2ray.aar" -o app/libs/libv2ray.aar
 
-      - name: Build Release APK
+      - name: Build Release APKs
         env:
           RELEASE_STORE_FILE: release-key.jks
           RELEASE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -37,16 +37,33 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleRelease
 
-      - name: Rename Universal APK
+      - name: Rename APKs
         run: |
           mkdir -p output
-          cp app/build/outputs/apk/release/app-universal-release.apk output/NarcicNG.apk
+          cp app/build/outputs/apk/release/app-arm64-v8a-release.apk output/NarcicNG-arm64.apk
+          cp app/build/outputs/apk/release/app-armeabi-v7a-release.apk output/NarcicNG-armeabi.apk
+          cp app/build/outputs/apk/release/app-universal-release.apk output/NarcicNG-universal.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           name: "Narcic NG ${{ github.ref_name }}"
-          files: output/NarcicNG.apk
+          body: |
+            ## Narcic NG ${{ github.ref_name }}
+
+            ### 📥 دانلود
+            | فایل | توضیح |
+            |------|-------|
+            | `NarcicNG-arm64.apk` | اکثر گوشی‌های جدید (پیشنهادی) |
+            | `NarcicNG-armeabi.apk` | گوشی‌های قدیمی‌تر |
+            | `NarcicNG-universal.apk` | همه گوشی‌ها |
+
+            ### 📢 پشتیبانی
+            کانال تلگرام: [@Narcic_Support](https://t.me/Narcic_Support)
+          files: |
+            output/NarcicNG-arm64.apk
+            output/NarcicNG-armeabi.apk
+            output/NarcicNG-universal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

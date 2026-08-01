@@ -1,46 +1,76 @@
-**[توضیحات-فارسی](ReadmeFA.md)**
+<div align="center">
 
 # Narcic NG ⚡️
 
-### A Fast, Open-Source, and Free VPN Client for Android
+**یک کلاینت VPN سریع، رایگان و متن‌باز برای اندروید**
 
-[![Platform](https://img.shields.io/badge/Platform-Android-green.svg?style=for-the-badge&logo=android)](https://github.com/valid7996/NarcicNG/releases)
-[![Open Source](https://img.shields.io/badge/Open_Source-%E2%9D%A4-orange.svg?style=for-the-badge)](#)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://github.com/valid7996/NarcicNG/blob/main/LICENSE)
-[![Telegram Channel](https://img.shields.io/badge/Telegram-@Narcic__Support-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/Narcic_Support)
+[![Platform](https://img.shields.io/badge/Platform-Android%205.0+-green.svg?style=for-the-badge&logo=android)](https://github.com/valid7996/NarcicNG/releases)
+[![Release](https://img.shields.io/github/v/release/valid7996/NarcicNG?style=for-the-badge&color=blue)](https://github.com/valid7996/NarcicNG/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/valid7996/NarcicNG/total?style=for-the-badge&color=orange)](https://github.com/valid7996/NarcicNG/releases)
+[![License](https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge)](LICENSE)
+[![Telegram](https://img.shields.io/badge/Telegram-@Narcic__Support-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/Narcic_Support)
 
----
-
-## 📖 About The Project
-
-**Narcic NG** is a modern, lightweight, and open-source Android VPN application designed to provide secure and unrestricted access to the internet.
+</div>
 
 ---
 
-## ✨ Key Features
+## ✨ ویژگی‌ها
 
-- 🌐 **Auto-Updated Built-in Configs:** Free access to high-speed servers across multiple locations.
-- ⚡️ **Real-Time Ping Test:** Easily check latency to choose the fastest server available.
-- 🔀 **Split Tunneling Support:** Choose which apps pass through the VPN tunnel.
-- 🎨 **Clean & Dark UI:** Intuitive, modern UI for a seamless single-tap connection experience.
-- 📖 **100% Open Source:** Fully transparent codebase built for the community.
-
----
-
-## 📥 Installation & Download
-
-1. Go to the **[Releases](https://github.com/valid7996/NarcicNG/releases)** section.
-2. Download the latest **`NarcicNG.apk`** file onto your Android device.
-3. Tap the APK to install (enable *Install from Unknown Sources* if prompted).
-4. Launch the app and tap **Connect**!
+- 🌐 **کانفیگ خودکار** — دریافت و بروزرسانی خودکار سرورهای رایگان از سراسر جهان
+- ⚡️ **تست پینگ لحظه‌ای** — انتخاب سریع‌ترین سرور
+- 🔀 **Split Tunneling** — انتخاب اپ‌هایی که از VPN استفاده کنن
+- 🎨 **رابط کاربری تمیز** — اتصال با یک ضربه
+- 🔒 **پروتکل‌های متنوع** — پشتیبانی از VLESS، VMess، Trojan، Shadowsocks و ...
+- 📖 **کاملاً متن‌باز** — کد شفاف برای همه
 
 ---
 
-## 🤝 Community & Support
+## 📥 دانلود
 
-- 📢 **Telegram Channel:** [@Narcic_Support](https://t.me/Narcic_Support)
-- 🐛 **Issues:** [GitHub Issues](https://github.com/valid7996/NarcicNG/issues)
+آخرین نسخه رو از بخش **[Releases](https://github.com/valid7996/NarcicNG/releases/latest)** دانلود کن:
+
+| فایل | مناسب برای |
+|------|------------|
+| `NarcicNG-arm64.apk` | اکثر گوشی‌های جدید ✅ پیشنهادی |
+| `NarcicNG-armeabi.apk` | گوشی‌های قدیمی‌تر |
+| `NarcicNG-universal.apk` | همه گوشی‌ها |
+
+### نحوه نصب
+1. فایل APK مناسب رو دانلود کن
+2. روی فایل ضربه بزن
+3. اگه Play Protect هشدار داد → **Install anyway** رو بزن
+4. برنامه رو باز کن و **Connect** بزن!
 
 ---
 
-Crafted with ❤️ for the community by **Narcic NG Team**
+## 🤝 پشتیبانی و ارتباط
+
+<div align="center">
+
+[![Telegram Channel](https://img.shields.io/badge/کانال_تلگرام-@Narcic__Support-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/Narcic_Support)
+
+برای دریافت آپدیت، کانفیگ رایگان و پشتیبانی به کانال بپیوندید 👆
+
+</div>
+
+---
+
+## 🛠 پروتکل‌های پشتیبانی شده
+
+| پروتکل | وضعیت |
+|--------|--------|
+| VLESS | ✅ |
+| VMess | ✅ |
+| Trojan | ✅ |
+| Shadowsocks | ✅ |
+| Hysteria2 | ✅ |
+| WireGuard | ✅ |
+| SOCKS | ✅ |
+
+---
+
+<div align="center">
+
+ساخته شده با ❤️ توسط **تیم Narcic NG**
+
+</div>

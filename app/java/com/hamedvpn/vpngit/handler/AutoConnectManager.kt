@@ -9,14 +9,7 @@ import com.hamedvpn.vpngit.util.LogUtil
 object AutoConnectManager {
 
     fun ensureSubscription(): String {
-        var panelUrl = MmkvManager.decodeSettingsString(AppConfig.PREF_PANEL_URL)
-        var panelApiKey = MmkvManager.decodeSettingsString(AppConfig.PREF_PANEL_API_KEY)
-
-        // Use defaults if not configured
-        if (panelUrl.isNullOrBlank()) panelUrl = AppConfig.DEFAULT_PANEL_URL
-        if (panelApiKey.isNullOrBlank()) panelApiKey = AppConfig.DEFAULT_PANEL_API_KEY
-
-        val subUrl = "${panelUrl.trimEnd('/')}/api/subscription?key=$panelApiKey"
+        val subUrl = AppConfig.DEFAULT_SUBSCRIPTION_URL
         LogUtil.i(AppConfig.TAG, "AutoConnectManager: Using subscription URL: $subUrl")
 
         // Find or create subscription
@@ -31,7 +24,7 @@ object AutoConnectManager {
             existing.guid
         } else {
             val subItem = SubscriptionItem().apply {
-                remarks = "V2RayNG Panel"
+                remarks = "Narcic NG"
                 url = subUrl
                 enabled = true
                 autoUpdate = true
@@ -42,13 +35,13 @@ object AutoConnectManager {
             updatedSubs.lastOrNull()?.guid ?: return ""
         }
 
-        // Always fetch fresh configs from panel
+        // Always fetch fresh configs from the repo
         try {
             val subItem = MmkvManager.decodeSubscription(guid) ?: return guid
             val result = AngConfigManager.updateConfigViaSub(SubscriptionCache(guid, subItem))
             LogUtil.i(AppConfig.TAG, "AutoConnectManager: Fetch result - configCount=${result.configCount}, success=${result.successCount}, failure=${result.failureCount}, skip=${result.skipCount}")
         } catch (e: Exception) {
-            LogUtil.e(AppConfig.TAG, "AutoConnectManager: Failed to fetch from panel", e)
+            LogUtil.e(AppConfig.TAG, "AutoConnectManager: Failed to fetch from repo", e)
         }
 
         return guid

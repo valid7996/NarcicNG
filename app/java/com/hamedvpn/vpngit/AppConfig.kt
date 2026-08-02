@@ -88,6 +88,7 @@ object AppConfig {
 
     // Default panel values (API key is base64 encoded for obfuscation)
     const val DEFAULT_PANEL_URL = "https://panel.p5r30.dpdns.org"
+    const val DEFAULT_SUBSCRIPTION_URL = "https://raw.githubusercontent.com/valid7996/NarcicNG/refs/heads/main/config.txt"
     private const val ENCODED_PANEL_API_KEY = "UmFzdGEtcGFyc2E="
 
     val DEFAULT_PANEL_API_KEY: String

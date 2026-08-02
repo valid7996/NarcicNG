@@ -26,6 +26,11 @@
     <string name="home_idle_title">Ready to connect</string>
     <string name="home_idle_subtitle">Tap Connect to get started</string>
     <string name="home_menu_retry">Retry</string>
+    <string name="home_stat_ping">Ping ms</string>
+    <string name="home_stat_upload">Upload Mb/s</string>
+    <string name="home_stat_download">Download Mb/s</string>
+    <string name="home_suggested_servers">Suggested Servers</string>
+    <string name="home_view_all">View all</string>
     <string name="server_list_title">Select location</string>
     <string name="server_list_empty">No results yet. Please wait while servers are tested…</string>
     <string name="home_telegram_prompt_message">Please join our Telegram channel for updates.</string>

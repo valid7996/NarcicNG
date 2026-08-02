@@ -24,7 +24,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:title="@string/app_name"
-                app:titleTextColor="@color/home_brand_teal" />
+                app:titleTextColor="@color/home_brand_teal">
+
+                <ImageView
+                    android:id="@+id/iv_shield_badge"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_shield_badge"
+                    android:padding="7dp"
+                    android:src="@drawable/ic_shield_check"
+                    android:contentDescription="@string/app_name" />
+
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -38,9 +51,105 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_spacing_dp16">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_bottom_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_spacing_dp16"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@drawable/bg_glass_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_spacing_dp16">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="@dimen/padding_spacing_dp16"
+                        android:background="@drawable/bg_status_icon_circle">
+
+                        <TextView
+                            android:id="@+id/tv_status_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="⏳"
+                            android:textSize="18sp"
+                            tools:ignore="HardcodedText" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_status_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/home_text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            tools:text="Testing servers" />
+
+                        <TextView
+                            android:id="@+id/tv_status_subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/home_text_secondary"
+                            android:textSize="13sp"
+                            tools:text="Tap to test again" />
+
+                    </LinearLayout>
+
+                    <Chronometer
+                        android:id="@+id/chronometer_connected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_spacing_dp8"
+                        android:fontFamily="monospace"
+                        android:textColor="@color/home_text_secondary"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        tools:text="00:00:03"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/tv_status_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_spacing_dp8"
+                        android:textColor="@color/home_brand_teal"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        tools:text="12/20" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_location"
@@ -56,7 +165,7 @@
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/card_bottom_status">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -123,6 +232,14 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <ImageView
+                        android:id="@+id/iv_power_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_power_connect"
+                        android:contentDescription="@string/tasker_start_service" />
+
                     <TextView
                         android:id="@+id/tv_connect_label"
                         android:layout_width="wrap_content"
@@ -153,97 +270,194 @@
                 android:gravity="center"
                 android:textColor="@color/home_text_secondary"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/card_bottom_status"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Please wait" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_bottom_status"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_spacing_dp16"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:background="@drawable/bg_glass_card"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/padding_spacing_dp16"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/padding_spacing_dp16">
+
+                <!-- Speed stats row: ping / upload / download -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/padding_spacing_dp16">
+                    android:layout_marginTop="@dimen/padding_spacing_dp8"
+                    android:orientation="horizontal">
 
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="@dimen/padding_spacing_dp16"
-                        android:background="@drawable/bg_status_icon_circle">
-
-                        <TextView
-                            android:id="@+id/tv_status_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:includeFontPadding="false"
-                            android:text="⏳"
-                            android:textSize="18sp"
-                            tools:ignore="HardcodedText" />
-
-                    </FrameLayout>
-
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:background="@drawable/bg_glass_card"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp">
 
-                        <TextView
-                            android:id="@+id/tv_status_title"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/home_text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            tools:text="Testing servers" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="14dp">
 
-                        <TextView
-                            android:id="@+id/tv_status_subtitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/home_text_secondary"
-                            android:textSize="13sp"
-                            tools:text="Tap to test again" />
+                            <TextView
+                                android:id="@+id/tv_ping_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
+                                android:textColor="@color/home_text_primary"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                tools:text="39" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/home_stat_ping"
+                                android:textColor="@color/home_text_muted"
+                                android:textSize="11sp" />
 
-                    <TextView
-                        android:id="@+id/tv_status_count"
-                        android:layout_width="wrap_content"
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/padding_spacing_dp8"
-                        android:textColor="@color/home_brand_teal"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        tools:text="12/20" />
+                        android:layout_marginHorizontal="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_glass_card"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="14dp">
+
+                            <TextView
+                                android:id="@+id/tv_upload_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
+                                android:textColor="@color/home_text_primary"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                tools:text="26.8" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/home_stat_upload"
+                                android:textColor="@color/home_text_muted"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_glass_card"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="14dp">
+
+                            <TextView
+                                android:id="@+id/tv_download_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
+                                android:textColor="@color/home_brand_teal"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                tools:text="74.2" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/home_stat_download"
+                                android:textColor="@color/home_text_muted"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <!-- Server list preview header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/home_suggested_servers"
+                        android:textColor="@color/home_text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_view_all_servers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="4dp"
+                        android:text="@string/home_view_all"
+                        android:textColor="@color/home_brand_teal"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_server_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 

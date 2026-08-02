@@ -34,6 +34,12 @@ import com.hamedvpn.vpngit.util.CountryUtils
 import com.hamedvpn.vpngit.util.LogUtil
 import com.hamedvpn.vpngit.util.Utils
 import com.hamedvpn.vpngit.viewmodel.MainViewModel
+import android.view.LayoutInflater
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.hamedvpn.vpngit.databinding.ItemServerResultBinding
+import com.hamedvpn.vpngit.dto.OutboundTrafficStat
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -45,6 +51,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     val mainViewModel: MainViewModel by viewModels()
 
     private var pulseAnimation: Animation? = null
+    private var speedJob: Job? = null
 
     private enum class ConnectButtonStyle { IDLE, TESTING, CONNECTED }
 
@@ -83,6 +90,9 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         setupNavigationDrawer()
 
         binding.cardLocation.setOnClickListener {
+            selectServerLauncher.launch(Intent(this, ServerListActivity::class.java))
+        }
+        binding.tvViewAllServers.setOnClickListener {
             selectServerLauncher.launch(Intent(this, ServerListActivity::class.java))
         }
         binding.layoutConnectButton.setOnClickListener { handleConnectButtonClick() }
@@ -255,7 +265,14 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvStatusIcon.text = getString(R.string.home_icon_connected)
         binding.tvStatusTitle.text = getString(R.string.home_connected_title)
         binding.tvStatusSubtitle.text = name ?: getString(R.string.home_unknown_location)
-        binding.tvStatusCount.text = getString(R.string.home_ping_ms, delayMillis)
+        binding.tvStatusCount.visibility = android.view.View.GONE
+        binding.chronometerConnected.visibility = android.view.View.VISIBLE
+        binding.chronometerConnected.base = android.os.SystemClock.elapsedRealtime()
+        binding.chronometerConnected.start()
+
+        binding.tvPingValue.text = delayMillis.toString()
+        startSpeedMonitor()
+        loadServerPreview()
     }
 
     private fun showTestingUi(state: AutoConnectState.Testing) {
@@ -264,10 +281,15 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvConnectSub.text = ""
         binding.tvStatus.text = getString(R.string.home_please_wait)
 
+        binding.chronometerConnected.stop()
+        binding.chronometerConnected.visibility = android.view.View.GONE
+        binding.tvStatusCount.visibility = android.view.View.VISIBLE
         binding.tvStatusIcon.text = getString(R.string.home_icon_testing)
         binding.tvStatusTitle.text = getString(R.string.home_testing_title)
         binding.tvStatusSubtitle.text = getString(R.string.home_testing_subtitle)
         binding.tvStatusCount.text = if (state.total > 0) "${state.testedCount}/${state.total}" else "…"
+        stopSpeedMonitor()
+        binding.tvPingValue.text = "0"
     }
 
     private fun showConnectingUi() {
@@ -276,10 +298,15 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvConnectSub.text = ""
         binding.tvStatus.text = getString(R.string.home_connecting_subtitle)
 
+        binding.chronometerConnected.stop()
+        binding.chronometerConnected.visibility = android.view.View.GONE
+        binding.tvStatusCount.visibility = android.view.View.VISIBLE
         binding.tvStatusIcon.text = getString(R.string.home_icon_testing)
         binding.tvStatusTitle.text = getString(R.string.home_connecting_title)
         binding.tvStatusSubtitle.text = getString(R.string.home_connecting_subtitle)
         binding.tvStatusCount.text = ""
+        stopSpeedMonitor()
+        binding.tvPingValue.text = "0"
     }
 
     private fun showAllFailedUi() {
@@ -288,10 +315,15 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvConnectSub.text = ""
         binding.tvStatus.text = getString(R.string.home_all_failed)
 
+        binding.chronometerConnected.stop()
+        binding.chronometerConnected.visibility = android.view.View.GONE
+        binding.tvStatusCount.visibility = android.view.View.VISIBLE
         binding.tvStatusIcon.text = getString(R.string.home_icon_warning)
         binding.tvStatusTitle.text = getString(R.string.home_all_failed_title)
         binding.tvStatusSubtitle.text = getString(R.string.home_tap_to_retry)
         binding.tvStatusCount.text = ""
+        stopSpeedMonitor()
+        binding.tvPingValue.text = "0"
     }
 
     private fun showIdleUi() {
@@ -299,6 +331,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvConnectLabel.text = getString(R.string.home_connect)
         binding.tvConnectSub.text = ""
         binding.tvStatus.text = getString(R.string.home_tap_to_connect)
+
+        binding.chronometerConnected.stop()
+        binding.chronometerConnected.visibility = android.view.View.GONE
+        binding.tvStatusCount.visibility = android.view.View.VISIBLE
 
         val guid = MmkvManager.getSelectServer()
         val profile = guid?.let { MmkvManager.decodeServerConfig(it) }
@@ -315,22 +351,31 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvStatusTitle.text = getString(R.string.home_idle_title)
         binding.tvStatusSubtitle.text = getString(R.string.home_idle_subtitle)
         binding.tvStatusCount.text = ""
+        stopSpeedMonitor()
+        binding.tvPingValue.text = "0"
+        loadServerPreview()
     }
 
     private fun setConnectButtonStyle(style: ConnectButtonStyle) {
         when (style) {
             ConnectButtonStyle.IDLE -> {
                 binding.layoutConnectButton.setBackgroundResource(R.drawable.bg_connect_button_idle)
+                binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connect)
+                binding.tvConnectLabel.setTextColor(getColor(R.color.home_text_primary))
                 stopPulse()
             }
 
             ConnectButtonStyle.TESTING -> {
                 binding.layoutConnectButton.setBackgroundResource(R.drawable.bg_connect_button_testing)
+                binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connect)
+                binding.tvConnectLabel.setTextColor(getColor(R.color.home_text_primary))
                 startPulse()
             }
 
             ConnectButtonStyle.CONNECTED -> {
                 binding.layoutConnectButton.setBackgroundResource(R.drawable.bg_connect_button_connected)
+                binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connected)
+                binding.tvConnectLabel.setTextColor(getColor(R.color.home_brand_teal))
                 stopPulse()
             }
         }
@@ -353,6 +398,93 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             pulseAnimation = null
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        loadServerPreview()
+    }
+
+    private fun startSpeedMonitor() {
+        if (speedJob != null) return
+        speedJob = lifecycleScope.launch {
+            while (true) {
+                val stats: List<OutboundTrafficStat> = runCatching {
+                    CoreServiceManager.queryAllOutboundTrafficStats()
+                }.getOrDefault(emptyList())
+
+                var uplink = 0L
+                var downlink = 0L
+                stats.forEach { stat ->
+                    when (stat.direction) {
+                        AppConfig.UPLINK -> uplink += stat.value
+                        AppConfig.DOWNLINK -> downlink += stat.value
+                    }
+                }
+
+                val intervalSeconds = 1.5
+                val uploadMbps = (uplink * 8) / intervalSeconds / 1_000_000
+                val downloadMbps = (downlink * 8) / intervalSeconds / 1_000_000
+
+                binding.tvUploadValue.text = String.format("%.1f", uploadMbps)
+                binding.tvDownloadValue.text = String.format("%.1f", downloadMbps)
+
+                delay(1500)
+            }
+        }
+    }
+
+    private fun stopSpeedMonitor() {
+        speedJob?.cancel()
+        speedJob = null
+        binding.tvUploadValue.text = "0.0"
+        binding.tvDownloadValue.text = "0.0"
+    }
+
+    private fun loadServerPreview() {
+        val container = binding.layoutServerPreview
+        container.removeAllViews()
+
+        if (!AutoConnectManager.isPanelConfigured()) return
+
+        val subId = AutoConnectManager.ensureSubscription()
+        val guids = MmkvManager.decodeServerList(subId)
+        val selected = MmkvManager.getSelectServer()
+
+        val rows = guids.mapNotNull { guid ->
+            val delay = MmkvManager.decodeServerAffiliationInfo(guid)?.testDelayMillis ?: 0L
+            val profile = MmkvManager.decodeServerConfig(guid) ?: return@mapNotNull null
+            val (flag, name) = CountryUtils.countryFromRemarks(profile.remarks)
+            Quadruple(guid, flag ?: CountryUtils.UNKNOWN_FLAG, name, delay)
+        }.sortedBy { if (it.fourth <= 0L) Long.MAX_VALUE else it.fourth }
+            .take(4)
+
+        rows.forEach { (guid, flag, name, delayMillis) ->
+            val itemBinding = ItemServerResultBinding.inflate(LayoutInflater.from(this), container, false)
+            itemBinding.tvFlag.text = flag
+            itemBinding.tvCountryName.text = name ?: getString(R.string.home_unknown_location)
+            itemBinding.tvPing.text = if (delayMillis > 0L) getString(R.string.home_ping_ms, delayMillis) else "---"
+            itemBinding.tvPing.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    if (delayMillis in 1 until 300) R.color.colorPing else R.color.home_warning
+                )
+            )
+            itemBinding.ivSelected.isVisible = guid == selected
+            itemBinding.root.setOnClickListener {
+                MmkvManager.setSelectServer(guid)
+                mainViewModel.connectToServer(guid)
+                if (mainViewModel.isRunning.value == true) {
+                    restartV2Ray()
+                } else {
+                    startV2RayWithPermissionCheck()
+                }
+                loadServerPreview()
+            }
+            container.addView(itemBinding.root)
+        }
+    }
+
+    private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)

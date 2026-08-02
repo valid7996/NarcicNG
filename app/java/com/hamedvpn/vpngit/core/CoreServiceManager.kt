@@ -295,7 +295,7 @@ object CoreServiceManager {
 
         val result = ArrayList<OutboundTrafficStat>()
 
-        payload.split(';').forEach { entry: String ->
+        payload.split(';').forEach { entry ->
             if (entry.isBlank()) return@forEach
 
             val parts = entry.split(',', limit = 3)

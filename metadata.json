@@ -1,6 +1,0 @@
-{
-  "name": "Narcic NG",
-  "description": "Narcic NG VPN application",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

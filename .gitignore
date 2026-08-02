@@ -1,20 +1,4 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/app/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-signing.properties
-*.jks
-release_credentials.txt
-github_secrets_to_copy.txt
+android.useAndroidX=true
+android.enableJetifier=true
+kotlin.code.style=official
+org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8

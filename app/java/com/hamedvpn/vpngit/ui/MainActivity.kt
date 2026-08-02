@@ -406,11 +406,22 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
     private fun startSpeedMonitor() {
         if (speedJob != null) return
+        var lastQueryTime = System.currentTimeMillis()
         speedJob = lifecycleScope.launch {
             while (true) {
+                delay(1500)
+
+                val queryTime = System.currentTimeMillis()
+                val elapsedSeconds = (queryTime - lastQueryTime) / 1000.0
+                lastQueryTime = queryTime
+                if (elapsedSeconds <= 0) continue
+
                 val stats: List<OutboundTrafficStat> = runCatching {
                     CoreServiceManager.queryAllOutboundTrafficStats()
-                }.getOrDefault(emptyList())
+                }.getOrElse {
+                    LogUtil.e(AppConfig.TAG, "MainActivity: speed query failed", it)
+                    emptyList()
+                }
 
                 var uplink = 0L
                 var downlink = 0L
@@ -421,14 +432,11 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                     }
                 }
 
-                val intervalSeconds = 1.5
-                val uploadMbps = (uplink * 8) / intervalSeconds / 1_000_000
-                val downloadMbps = (downlink * 8) / intervalSeconds / 1_000_000
+                val uploadMbps = (uplink * 8) / elapsedSeconds / 1_000_000
+                val downloadMbps = (downlink * 8) / elapsedSeconds / 1_000_000
 
                 binding.tvUploadValue.text = String.format("%.1f", uploadMbps)
                 binding.tvDownloadValue.text = String.format("%.1f", downloadMbps)
-
-                delay(1500)
             }
         }
     }

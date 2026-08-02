@@ -600,10 +600,9 @@ object CoreConfigManager {
 
     
     private fun applySpeedDisabled(v2rayConfig: V2rayConfig) {
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SPEED_ENABLED) != true) {
-            v2rayConfig.stats = null
-            v2rayConfig.policy = null
-        }
+        // Traffic stats are always kept enabled so the home screen's live
+        // upload/download speed indicators work regardless of the legacy
+        // notification-only speed toggle.
     }
 
     

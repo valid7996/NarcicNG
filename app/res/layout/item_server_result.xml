@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/padding_spacing_dp8"
+    android:layout_marginBottom="8dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/home_surface"
-    app:cardCornerRadius="14dp"
+    android:background="@drawable/bg_glass_card"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
 
     <LinearLayout
@@ -17,50 +18,87 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/padding_spacing_dp16"
-        android:paddingVertical="14dp">
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="12dp">
 
         <TextView
             android:id="@+id/tv_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/padding_spacing_dp16"
+            android:layout_marginEnd="12dp"
             android:includeFontPadding="false"
-            android:textSize="24sp"
+            android:textSize="26sp"
             tools:ignore="HardcodedText"
             tools:text="🇩🇪" />
 
-        <TextView
-            android:id="@+id/tv_country_name"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/home_text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Germany" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_country_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/home_text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="Germany" />
+
+            <TextView
+                android:id="@+id/tv_protocol_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/home_text_muted"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                tools:text="VMess" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/tv_signal_dot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/bg_signal_dot_good" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_ping"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/padding_spacing_dp8"
-            android:textSize="14sp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_ping_badge"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/home_brand_teal"
+            android:textSize="12sp"
             android:textStyle="bold"
             tools:text="182 ms" />
 
         <ImageView
             android:id="@+id/iv_selected"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_action_done"
             android:visibility="gone"
-            app:tint="@color/colorPing" />
+            app:tint="@color/home_brand_teal" />
 
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-

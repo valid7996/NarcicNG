@@ -10,15 +10,25 @@
     <color name="colorIndicator">@color/md_theme_primary</color>
 
     
-    <color name="home_background">#101314</color>
-    <color name="home_surface">#33FFFFFF</color>
-    <color name="home_surface_stroke">#4DFFFFFF</color>
+    <color name="home_background">#080C0E</color>
+    <color name="home_surface">#1CFFFFFF</color>
+    <color name="home_surface_stroke">#22FFFFFF</color>
     <color name="home_brand_teal">#00E89D</color>
-    <color name="home_text_primary">#F5F7F7</color>
-    <color name="home_text_secondary">#9AA3A6</color>
-    <color name="home_text_muted">#6B7A99</color>
+    <color name="home_brand_teal_dim">#007A53</color>
+    <color name="home_brand_teal_glow">#0D3D2E</color>
+    <color name="home_text_primary">#F0F4F4</color>
+    <color name="home_text_secondary">#8A9599</color>
+    <color name="home_text_muted">#566878</color>
     <color name="home_warning">#F9A73C</color>
     <color name="home_danger">#FF5C7A</color>
+    <color name="home_card_fill">#10FFFFFF</color>
+    <color name="home_card_border">#1AFFFFFF</color>
+    <color name="home_ring_idle">#1A4D3E</color>
+    <color name="home_ring_connected">#00E89D</color>
+    <color name="home_ring_testing">#F9A73C</color>
+    <color name="home_ping_good">#00E89D</color>
+    <color name="home_ping_medium">#F9A73C</color>
+    <color name="home_ping_slow">#FF5C7A</color>
 
     
     <color name="md_theme_primary">#000000</color>

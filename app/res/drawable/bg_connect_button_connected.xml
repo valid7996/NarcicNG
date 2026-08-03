@@ -1,42 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- outer glow ring -->
-    <item>
+    <item android:left="6dp" android:right="6dp" android:top="6dp" android:bottom="6dp">
         <shape android:shape="oval">
-            <solid android:color="#1400E89D" />
+            <gradient android:gradientRadius="50%p" android:startColor="#0D4A38" android:endColor="#082A20" android:type="radial" />
         </shape>
     </item>
-    <!-- middle glow ring -->
-    <item
-        android:left="14dp"
-        android:top="14dp"
-        android:right="14dp"
-        android:bottom="14dp">
+    <item android:left="2dp" android:right="2dp" android:top="2dp" android:bottom="2dp">
         <shape android:shape="oval">
-            <solid android:color="#2600E89D" />
+            <solid android:color="#0A2E24" />
         </shape>
     </item>
-    <!-- inner glow ring -->
-    <item
-        android:left="28dp"
-        android:top="28dp"
-        android:right="28dp"
-        android:bottom="28dp">
+    <item android:left="12dp" android:right="12dp" android:top="12dp" android:bottom="12dp">
         <shape android:shape="oval">
-            <solid android:color="#4000E89D" />
+            <gradient android:gradientRadius="55%p" android:startColor="#005E45" android:centerColor="#004D38" android:endColor="#003D2C" android:type="radial" />
         </shape>
     </item>
-    <!-- main button circle -->
-    <item
-        android:left="40dp"
-        android:top="40dp"
-        android:right="40dp"
-        android:bottom="40dp">
+    <item android:left="2dp" android:right="2dp" android:top="2dp" android:bottom="2dp">
         <shape android:shape="oval">
-            <solid android:color="#0D2A22" />
-            <stroke
-                android:width="2dp"
-                android:color="#8000E89D" />
+            <stroke android:width="2dp" android:color="#00E89D" />
+        </shape>
+    </item>
+    <item android:left="12dp" android:right="12dp" android:top="12dp" android:bottom="12dp">
+        <shape android:shape="oval">
+            <stroke android:width="1dp" android:color="#33FFB8" />
+        </shape>
+    </item>
+    <item android:left="28dp" android:right="28dp" android:top="16dp" android:bottom="55dp">
+        <shape android:shape="oval">
+            <gradient android:angle="270" android:startColor="#20FFFFFF" android:endColor="#00FFFFFF" android:type="linear" />
         </shape>
     </item>
 </layer-list>

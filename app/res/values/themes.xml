@@ -78,5 +78,11 @@
         <item name="colorPrimary">@color/color_fab_active</item>
     </style>
 
+    <style name="TextAppearance.Narcic.Toolbar" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
 </resources>
 

@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.activity.OnBackPressedCallback
@@ -51,6 +53,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     val mainViewModel: MainViewModel by viewModels()
 
     private var pulseAnimation: Animation? = null
+    private var pulseRingAnimatorSet: AnimatorSet? = null
     private var speedJob: Job? = null
 
     private enum class ConnectButtonStyle { IDLE, TESTING, CONNECTED }
@@ -271,6 +274,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.chronometerConnected.start()
 
         binding.tvPingValue.text = delayMillis.toString()
+        binding.barPing.animate()
+            .scaleX(kotlin.math.max(0.1f, 1f - (delayMillis / 400f).toFloat()))
+            .setDuration(500)
+            .start()
         startSpeedMonitor()
         loadServerPreview()
     }
@@ -363,6 +370,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connect)
                 binding.tvConnectLabel.setTextColor(getColor(R.color.home_text_primary))
                 stopPulse()
+                stopPulseRing()
             }
 
             ConnectButtonStyle.TESTING -> {
@@ -370,6 +378,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connect)
                 binding.tvConnectLabel.setTextColor(getColor(R.color.home_text_primary))
                 startPulse()
+                stopPulseRing()
             }
 
             ConnectButtonStyle.CONNECTED -> {
@@ -377,6 +386,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 binding.ivPowerIcon.setImageResource(R.drawable.ic_power_connected)
                 binding.tvConnectLabel.setTextColor(getColor(R.color.home_brand_teal))
                 stopPulse()
+                startPulseRing()
             }
         }
     }
@@ -397,6 +407,44 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             binding.layoutConnectButton.clearAnimation()
             pulseAnimation = null
         }
+    }
+
+    private fun startPulseRing() {
+        stopPulseRing()
+        val ring = binding.viewPulseRing
+        ring.visibility = android.view.View.VISIBLE
+
+        val scaleX = ObjectAnimator.ofFloat(ring, android.view.View.SCALE_X, 1f, 1.15f, 1f)
+        val scaleY = ObjectAnimator.ofFloat(ring, android.view.View.SCALE_Y, 1f, 1.15f, 1f)
+        val alpha = ObjectAnimator.ofFloat(ring, android.view.View.ALPHA, 0.6f, 0f, 0.6f)
+
+        listOf(scaleX, scaleY, alpha).forEach {
+            it.repeatCount = ObjectAnimator.INFINITE
+            it.duration = 2000
+            it.interpolator = android.view.animation.AccelerateDecelerateInterpolator()
+        }
+
+        pulseRingAnimatorSet = AnimatorSet().apply {
+            playTogether(scaleX, scaleY, alpha)
+            start()
+        }
+    }
+
+    private fun stopPulseRing() {
+        pulseRingAnimatorSet?.cancel()
+        pulseRingAnimatorSet = null
+        binding.viewPulseRing.visibility = android.view.View.GONE
+        binding.viewPulseRing.scaleX = 1f
+        binding.viewPulseRing.scaleY = 1f
+        binding.viewPulseRing.alpha = 0.6f
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        pulseRingAnimatorSet?.cancel()
+        pulseRingAnimatorSet = null
+        speedJob?.cancel()
+        speedJob = null
     }
 
     override fun onResume() {
@@ -437,6 +485,16 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
                 binding.tvUploadValue.text = String.format("%.1f", uploadMbps)
                 binding.tvDownloadValue.text = String.format("%.1f", downloadMbps)
+
+                // Animate the small indicator bars relative to a 100 Mb/s scale
+                binding.barUpload.animate()
+                    .scaleX(kotlin.math.max(0.15f, kotlin.math.min(1f, (uploadMbps / 100f).toFloat())))
+                    .setDuration(500)
+                    .start()
+                binding.barDownload.animate()
+                    .scaleX(kotlin.math.max(0.15f, kotlin.math.min(1f, (downloadMbps / 100f).toFloat())))
+                    .setDuration(500)
+                    .start()
             }
         }
     }
@@ -477,6 +535,18 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                     if (delayMillis in 1 until 300) R.color.colorPing else R.color.home_warning
                 )
             )
+
+            val protocolName = MmkvManager.decodeServerConfig(guid)?.configType?.name.orEmpty()
+            itemBinding.tvProtocolType.text = protocolName
+
+            val signalDotRes = when {
+                delayMillis <= 0L -> R.drawable.bg_signal_dot_slow
+                delayMillis < 120 -> R.drawable.bg_signal_dot_good
+                delayMillis < 250 -> R.drawable.bg_signal_dot_medium
+                else -> R.drawable.bg_signal_dot_slow
+            }
+            itemBinding.tvSignalDot.setBackgroundResource(signalDotRes)
+
             itemBinding.ivSelected.isVisible = guid == selected
             itemBinding.root.setOnClickListener {
                 MmkvManager.setSelectServer(guid)

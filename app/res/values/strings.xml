@@ -31,6 +31,12 @@
     <string name="home_stat_download">Download Mb/s</string>
     <string name="home_suggested_servers">Suggested Servers</string>
     <string name="home_view_all">View all</string>
+    <string name="home_signal_excellent">Excellent</string>
+    <string name="home_signal_good">Good</string>
+    <string name="home_signal_fair">Fair</string>
+    <string name="home_signal_poor">Poor</string>
+    <string name="home_protocol_label">Protocol</string>
+    <string name="home_connected_subtitle">Traffic encrypted • %s</string>
     <string name="server_list_title">Select location</string>
     <string name="server_list_empty">No results yet. Please wait while servers are tested…</string>
     <string name="home_telegram_prompt_message">Please join our Telegram channel for updates.</string>

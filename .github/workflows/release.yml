@@ -16,7 +16,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: gradle
 
       - name: Decode Keystore
         run: |
@@ -25,6 +24,7 @@ jobs:
       - name: Download libv2ray.aar
         run: |
           mkdir -p app/libs
+          rm -f app/libs/*.aar
           curl -L "https://github.com/2dust/AndroidLibXrayLite/releases/download/v26.7.5/libv2ray.aar" -o app/libs/libv2ray.aar
 
       - name: Build Release APKs
@@ -35,7 +35,7 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew clean assembleRelease --no-build-cache
 
       - name: Rename APKs
         run: |

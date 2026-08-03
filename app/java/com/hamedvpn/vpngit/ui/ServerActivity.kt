@@ -139,6 +139,7 @@ class ServerActivity : BaseActivity() {
     private val layout_kcp: LinearLayout? by lazy { findViewById(R.id.layout_kcp) }
     private val et_extra: EditText? by lazy { findViewById(R.id.et_extra) }
     private val et_fm: EditText? by lazy { findViewById(R.id.et_fm) }
+    private val et_cs: EditText? by lazy { findViewById(R.id.et_cs) }
     private val layout_extra: LinearLayout? by lazy { findViewById(R.id.layout_extra) }
     private val et_ech_config_list: EditText? by lazy { findViewById(R.id.et_ech_config_list) }
     private val container_ech_config_list: LinearLayout? by lazy { findViewById(R.id.lay_ech_config_list) }
@@ -249,6 +250,7 @@ class ServerActivity : BaseActivity() {
                     }.orEmpty()
                 )
                 et_fm?.text = Utils.getEditable(config?.finalMask)
+                et_cs?.text = Utils.getEditable(config?.cipherSuite)
 
                 layout_kcp?.visibility =
                     when (networks[position]) {
@@ -589,6 +591,7 @@ class ServerActivity : BaseActivity() {
         profileItem.xhttpMode = transportTypes(networks[network])[type]
         profileItem.xhttpExtra = et_extra?.text?.toString()?.trim().nullIfBlank()
         profileItem.finalMask = et_fm?.text?.toString()?.trim()?.nullIfBlank()
+        profileItem.cipherSuite = et_cs?.text?.toString()?.trim()?.nullIfBlank()
         profileItem.kcpMtu = et_kcp_mtu?.text?.toString()?.toIntOrNull()
         profileItem.kcpTti = et_kcp_tti?.text?.toString()?.toIntOrNull()
         if (networks[network] == NetworkType.WS.type || networks[network] == NetworkType.XHTTP.type) {

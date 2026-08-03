@@ -9,18 +9,20 @@ import com.hamedvpn.vpngit.util.LogUtil
 object AutoConnectManager {
 
     fun ensureSubscription(): String {
-        val subUrl = AppConfig.DEFAULT_SUBSCRIPTION_URL
+        val baseUrl = AppConfig.DEFAULT_SUBSCRIPTION_URL
+        val subUrl = "$baseUrl?_=${System.currentTimeMillis()}"
         LogUtil.i(AppConfig.TAG, "AutoConnectManager: Using subscription URL: $subUrl")
 
-        // Find or create subscription
+        // Find or create subscription (match by base URL, ignoring cache-buster)
         val subscriptions = MmkvManager.decodeSubscriptions()
-        val existing = subscriptions.find { it.subscription.url == subUrl }
+        val existing = subscriptions.find { it.subscription.url.substringBefore("?") == baseUrl }
 
         val guid = if (existing != null) {
+            existing.subscription.url = subUrl
             if (!existing.subscription.enabled) {
                 existing.subscription.enabled = true
-                MmkvManager.encodeSubscription(existing.guid, existing.subscription)
             }
+            MmkvManager.encodeSubscription(existing.guid, existing.subscription)
             existing.guid
         } else {
             val subItem = SubscriptionItem().apply {

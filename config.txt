@@ -34,7 +34,7 @@ vless://baad4fab-ceee-4a9d-a714-e641d39405f4@8.6.112.237:2087?path=%2FquVyHBVGzx
 
 vless://baad4fab-ceee-4a9d-a714-e641d39405f4@8.6.112.82:2087?path=%2FlQAwzSK7EFr1QYgQ%2FMTkzLjEyMi4xNTQuODI%3D%3Fed%3D2560&security=tls&alpn=h3%2Ch2%2Chttp%2F1.1&encryption=none&insecure=0&host=panel.validbv7996.dpdns.org&fp=chrome&type=ws&allowInsecure=0&sni=pANeL.VAlIDbv7996.dPDnS.ORg#🇺🇸%20Narcic%20US%2012
 
-{
+`{
   "remarks": "💦 1 - Warp 🇮🇷",
   "version": {
     "min": "26.2.6"

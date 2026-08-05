@@ -240,6 +240,14 @@ fun MainScreen(
                         .fillMaxSize()
                         .padding(innerPadding)
                 ) {
+                    ConnectHero(
+                        isRunning = isRunning,
+                        isTesting = uiState.isTesting,
+                        statusText = displayText,
+                        selectedServerName = null,
+                        onToggle = { onAction(MainAction.ToggleService) },
+                    )
+
                     if (groups.size > 1) {
                         GroupTabBar(
                             groups = groups,

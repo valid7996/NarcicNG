@@ -20,6 +20,7 @@ import com.narcic.ng.extension.toast
 import com.narcic.ng.extension.toastError
 import com.narcic.ng.extension.toastSuccess
 import com.narcic.ng.handler.AngConfigManager
+import com.narcic.ng.handler.DefaultConfigSource
 import com.narcic.ng.handler.MmkvManager
 import com.narcic.ng.handler.SettingsChangeManager
 import com.narcic.ng.handler.SettingsManager
@@ -91,7 +92,13 @@ class MainActivity : HelperBaseComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainViewModel.onAction(MainAction.Initialize)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            DefaultConfigSource.ensureAndFetch()
+            withContext(Dispatchers.Main) {
+                mainViewModel.onAction(MainAction.Initialize)
+            }
+        }
 
         checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) {}
     }

@@ -1,5 +1,6 @@
 package com.narcic.ng.ui.main
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -219,7 +220,8 @@ fun MainScreen(
                     onAction = onAction,
                     onDelAllConfig = { showDelAllConfirm = true },
                     onDelDuplicateConfig = { showDelDuplicateConfirm = true },
-                    onDelInvalidConfig = { showDelInvalidConfirm = true }
+                    onDelInvalidConfig = { showDelInvalidConfirm = true },
+                    onFetchConfig = { onAction(MainAction.UpdateSubscriptions) }
                 )
             },
             bottomBar = {
@@ -247,6 +249,16 @@ fun MainScreen(
                         selectedServerName = null,
                         onToggle = { onAction(MainAction.ToggleService) },
                     )
+
+                    SuggestedServers(
+                        mainViewModel = mainViewModel,
+                        groupId = uiState.selectedGroupId,
+                        selectedGuid = selectedGuid,
+                        onSelectServer = { guid -> onAction(MainAction.SelectServer(guid)) },
+                        onViewAll = { /* server list already visible below */ },
+                    )
+
+                    Box(modifier = Modifier.padding(top = 12.dp))
 
                     if (groups.size > 1) {
                         GroupTabBar(

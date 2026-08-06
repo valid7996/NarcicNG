@@ -41,7 +41,8 @@ fun MainTopBar(
     onAction: (MainAction) -> Unit,
     onDelAllConfig: () -> Unit,
     onDelDuplicateConfig: () -> Unit,
-    onDelInvalidConfig: () -> Unit
+    onDelInvalidConfig: () -> Unit,
+    onFetchConfig: () -> Unit,
 ) {
     var showImportMenu by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
@@ -73,6 +74,9 @@ fun MainTopBar(
         },
         actions = {
             if (!showSearch) {
+                IconButton(onClick = onFetchConfig) {
+                    Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = "Get configs")
+                }
                 IconButton(onClick = { onSearchToggle(true) }) {
                     Icon(painterResource(R.drawable.ic_search_24dp), contentDescription = "filter")
                 }

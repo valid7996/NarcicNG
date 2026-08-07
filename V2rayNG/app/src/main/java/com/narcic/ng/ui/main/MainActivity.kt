@@ -24,6 +24,7 @@ import com.narcic.ng.handler.DefaultConfigSource
 import com.narcic.ng.handler.MmkvManager
 import com.narcic.ng.handler.SettingsChangeManager
 import com.narcic.ng.handler.SettingsManager
+import com.narcic.ng.handler.SubscriptionUpdater
 import com.narcic.ng.ui.AboutActivity
 import com.narcic.ng.ui.backup.BackupActivity
 import com.narcic.ng.ui.base.HelperBaseComponentActivity
@@ -98,6 +99,7 @@ class MainActivity : HelperBaseComponentActivity() {
         if (justCreated) {
             mainViewModel.onAction(MainAction.UpdateSubscriptions)
         }
+        SubscriptionUpdater.sync(forceReschedule = justCreated)
 
         checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) {}
     }

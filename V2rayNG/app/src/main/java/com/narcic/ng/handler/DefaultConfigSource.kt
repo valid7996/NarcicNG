@@ -25,22 +25,38 @@ object DefaultConfigSource {
         val subscriptions = MmkvManager.decodeSubscriptions()
         val existing = subscriptions.find { it.subscription.url.substringBefore("?") == baseUrl }
 
+        val guid: String
+        val needsFetch: Boolean
+
         if (existing != null) {
-            val wasDisabled = !existing.subscription.enabled
+            needsFetch = !existing.subscription.enabled
             existing.subscription.url = fetchUrl
             existing.subscription.enabled = true
+            existing.subscription.autoUpdate = true
+            existing.subscription.updateInterval = 720 // 12 hours
             MmkvManager.encodeSubscription(existing.guid, existing.subscription)
-            return wasDisabled
+            guid = existing.guid
+        } else {
+            val subItem = SubscriptionItem().apply {
+                remarks = "Narcic NG"
+                url = fetchUrl
+                enabled = true
+                autoUpdate = true
+                updateInterval = 720 // 12 hours
+            }
+            MmkvManager.encodeSubscription("", subItem)
+            guid = MmkvManager.decodeSubscriptions()
+                .find { it.subscription.url.substringBefore("?") == baseUrl }?.guid.orEmpty()
+            needsFetch = true
         }
 
-        val subItem = SubscriptionItem().apply {
-            remarks = "Narcic NG"
-            url = fetchUrl
-            enabled = true
-            autoUpdate = true
-            updateInterval = 60
+        // Always keep the Narcic NG subscription as the active tab, so the
+        // manual fetch button and the test button operate on the right
+        // group by default (instead of the empty "Default" tab).
+        if (guid.isNotEmpty()) {
+            MmkvManager.encodeSettings(AppConfig.CACHE_SUBSCRIPTION_ID, guid)
         }
-        MmkvManager.encodeSubscription("", subItem)
-        return true
+
+        return needsFetch
     }
 }

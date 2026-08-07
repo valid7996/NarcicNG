@@ -93,11 +93,10 @@ class MainActivity : HelperBaseComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            DefaultConfigSource.ensureAndFetch()
-            withContext(Dispatchers.Main) {
-                mainViewModel.onAction(MainAction.Initialize)
-            }
+        val justCreated = DefaultConfigSource.ensureSubscriptionExists()
+        mainViewModel.onAction(MainAction.Initialize)
+        if (justCreated) {
+            mainViewModel.onAction(MainAction.UpdateSubscriptions)
         }
 
         checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) {}

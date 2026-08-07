@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -50,6 +51,7 @@ fun ConnectHero(
     statusText: String,
     selectedServerName: String?,
     onToggle: () -> Unit,
+    onTestAll: () -> Unit,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseScale by infiniteTransition.animateFloat(
@@ -192,5 +194,35 @@ fun ConnectHero(
             style = MaterialTheme.typography.bodySmall,
             color = if (isRunning) NarcicTeal else MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        Box(modifier = Modifier.padding(top = 10.dp))
+
+        // Real-delay test button — precise per-config ping, right below Connect.
+        Row(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onTestAll
+                )
+                .padding(horizontal = 18.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_flash_on_24dp),
+                contentDescription = null,
+                tint = NarcicTeal,
+                modifier = Modifier.size(16.dp)
+            )
+            Box(modifier = Modifier.padding(start = 6.dp))
+            Text(
+                text = "Test",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = NarcicTeal,
+            )
+        }
     }
 }

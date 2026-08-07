@@ -3,6 +3,7 @@ package com.narcic.ng.ui.main
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,22 +11,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -37,9 +50,23 @@ import com.narcic.ng.R
 import com.narcic.ng.ui.compose.AppDivider
 import com.narcic.ng.ui.compose.verticalScrollbar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainDrawerContent(onNavigate: (String) -> Unit) {
+fun MainDrawerContent(
+    onNavigate: (String) -> Unit,
+    onAction: (MainAction) -> Unit,
+    onDelAllConfig: () -> Unit,
+    onDelDuplicateConfig: () -> Unit,
+    onDelInvalidConfig: () -> Unit,
+) {
     val drawerScrollState = rememberScrollState()
+    var showImportMenu by remember { mutableStateOf(false) }
+    var showManageMenu by remember { mutableStateOf(false) }
+    val importMenuScrollState = rememberScrollState()
+    val manageMenuScrollState = rememberScrollState()
+    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val maxMenuHeight = LocalConfiguration.current.screenHeightDp.dp - statusBarHeight - navBarHeight - 20.dp
 
     ModalDrawerSheet(
         modifier = Modifier
@@ -75,6 +102,60 @@ fun MainDrawerContent(onNavigate: (String) -> Unit) {
                     )
                 }
             }
+
+            // Import / manage configs — moved here from the top bar to keep the
+            // connection screen uncluttered.
+            Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+                DrawerMenuItem(
+                    icon = painterResource(R.drawable.ic_add_24dp),
+                    label = "Import config",
+                    onClick = { showImportMenu = true }
+                )
+                DropdownMenu(
+                    expanded = showImportMenu,
+                    onDismissRequest = { showImportMenu = false },
+                    scrollState = importMenuScrollState,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .heightIn(max = maxMenuHeight)
+                        .verticalScrollbar(importMenuScrollState)
+                ) {
+                    ImportMenuContent(
+                        onAction = { action ->
+                            showImportMenu = false
+                            onAction(action)
+                        }
+                    )
+                }
+            }
+            Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+                DrawerMenuItem(
+                    icon = painterResource(R.drawable.ic_more_vert_24dp),
+                    label = "Manage configs",
+                    onClick = { showManageMenu = true }
+                )
+                DropdownMenu(
+                    expanded = showManageMenu,
+                    onDismissRequest = { showManageMenu = false },
+                    scrollState = manageMenuScrollState,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .heightIn(max = maxMenuHeight)
+                        .verticalScrollbar(manageMenuScrollState)
+                ) {
+                    MoreMenuContent(
+                        onAction = { action ->
+                            showManageMenu = false
+                            onAction(action)
+                        },
+                        onDelAllConfig = { showManageMenu = false; onDelAllConfig() },
+                        onDelDuplicateConfig = { showManageMenu = false; onDelDuplicateConfig() },
+                        onDelInvalidConfig = { showManageMenu = false; onDelInvalidConfig() }
+                    )
+                }
+            }
+
+            AppDivider()
             DrawerMenuGroup(
                 items = listOf(
                     DrawerMenuItemData(R.drawable.ic_subscriptions_24dp, R.string.title_sub_setting, "sub_setting"),

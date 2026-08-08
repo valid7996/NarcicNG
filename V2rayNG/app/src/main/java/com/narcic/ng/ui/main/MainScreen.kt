@@ -110,9 +110,8 @@ fun MainScreen(
                         isRunning = isRunning,
                         isTesting = uiState.isTesting,
                         statusText = displayText,
-                        selectedServerName = null,
                         onToggle = { onAction(MainAction.ToggleService) },
-                        onTestAll = { onAction(MainAction.TestRealAllServers) },
+                        onTest = { onAction(MainAction.TestRealAllServers) },
                     )
 
                     SuggestedServers(

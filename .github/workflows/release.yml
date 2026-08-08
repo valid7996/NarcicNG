@@ -88,11 +88,17 @@ jobs:
           cd ${{ github.workspace }}/V2rayNG
           echo "sdk.dir=${ANDROID_HOME}" > local.properties
           chmod 755 gradlew
+          TAG_NAME="${{ github.ref_name }}"
+          VERSION_NAME="${TAG_NAME#v}"
+          VERSION_CODE="${{ github.run_number }}"
+          echo "Building version $VERSION_NAME (code $VERSION_CODE)"
           ./gradlew assemblePlaystoreRelease \
             -Pandroid.injected.signing.store.file=${{ github.workspace }}/V2rayNG/app/release-key.jks \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }} \
+            -PNARCIC_VERSION_NAME="$VERSION_NAME" \
+            -PNARCIC_VERSION_CODE="$VERSION_CODE"
 
       - name: Rename APKs
         run: |

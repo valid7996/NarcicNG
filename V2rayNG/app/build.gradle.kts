@@ -13,8 +13,10 @@ android {
         applicationId = "com.narcic.ng"
         minSdk = 24
         targetSdk = 37
-        versionCode = 742
-        versionName = "2.3.2"
+        // Overridable from CI so the released APK's version always matches
+        // the pushed git tag, e.g. -PNARCIC_VERSION_NAME=2.1.6 -PNARCIC_VERSION_CODE=1206
+        versionCode = (properties["NARCIC_VERSION_CODE"] as? String)?.toIntOrNull() ?: 742
+        versionName = (properties["NARCIC_VERSION_NAME"] as? String) ?: "2.3.2"
 
         val abiFilterList = (properties["ABI_FILTERS"] as? String)?.split(';')
         splits {
